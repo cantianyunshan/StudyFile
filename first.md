@@ -1,0 +1,65 @@
+# 工具
+
+## 包管理工具
+
+包管理工具应该有的基本功能：
+
+- 依赖管理
+- 依赖包版本控制
+- 对应的包管理平台
+- 可以私有化部署
+- 代码包可以复用
+- 构建、测试、打包
+- 发布上线
+
+### go.mod
+
+#### go path
+
+1. 代码开发必须再go path src目录下，不然会出问题
+2. 依赖手动管理
+3. 依赖包没有版本可言
+
+这样看，go path不算包管理工具
+
+#### govendor
+
+1. 解决了包依赖问题，一个配置文件就管理
+2. 依赖全部下载到项目vendor下，每个项目每个项目都要有一份
+
+#### 关于go.mod
+
+go modules 是 golang 1.11 新加的特性。现在1.12 已经发布了，是时候用起来了。Modules官方定义为：
+
+> 模块是相关Go包的集合。modules是源代码交换和版本控制的单元。 go命令直接支持使用modules，包括记录和解析对其他模块的依赖性。modules替换旧的基于GOPATH的方法来指定在给定构建中使用哪些源文件。
+
+#### 如何使用go.mod
+
+[包管理工具go.mod，可以说超级详细了](https://www.jianshu.com/p/760c97ff644c)
+
+1、首先将你的版本更新到最新的Go版本(>=1.11)，如何更新版本可以自行百度。
+
+2、通过go命令行，进入到你当前的工程目录下，在命令行设置临时环境变量set GO111MODULE=on；
+
+3、执行命令go mod init在当前目录下生成一个go.mod文件，执行这条命令时，当前目录不能存在go.mod文件。如果之前生成过，要先删除；
+
+4、如果你工程中存在一些不能确定版本的包，那么生成的go.mod文件可能就不完整，因此继续执行下面的命令；
+
+5、执行go mod tidy命令，它会添加缺失的模块以及移除不需要的模块。执行后会生成go.sum文件(模块下载条目)。添加参数-v，例如go mod tidy -v可以将执行的信息，即删除和添加的包打印到命令行；
+
+6、执行命令go mod verify来检查当前模块的依赖是否全部下载下来，是否下载下来被修改过。如果所有的模块都没有被修改过，那么执行这条命令之后，会打印all modules verified;
+
+7、执行命令go mod vendor生成vendor文件夹，该文件夹下将会放置你go.mod文件描述的依赖包，文件夹下同时还有一个文件modules.txt，它是你整个工程的所有模块。在执行这条命令之前，如果你工程之前有vendor目录，应该先进行删除。同理go mod vendor -v会将添加到vendor中的模块打印出来。
+
+**gomod** 和 **gopath** 两个包管理方案，并且相互不兼容，在 gopath 查找包，按照 goroot 和多 gopath 目录下 src/xxx 依次查找。在 gomod 下查找包，解析 go.mod 文件查找包，mod 包名就是包的前缀，里面的目录就后续路径了。在 gomod 模式下，查找包就不会去 gopath 查找，只是 gomod 包缓存在 gopath/pkg/mod 里面。
+
+### maven
+
+maven的定位是项目管理工具。
+
+来自维基百科：
+
+> **Apache Maven**，是一个[软件](https://zh.wikipedia.org/wiki/软件)（特别是[Java](https://zh.wikipedia.org/wiki/Java_(编程语言))软件）[项目管理](https://zh.wikipedia.org/wiki/项目管理)及[自动构建](https://zh.wikipedia.org/wiki/自动构建)工具，由[Apache软件基金会](https://zh.wikipedia.org/wiki/Apache软件基金会)所提供。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。
+>
+> Maven也可被用于构建和管理各种项目，例如[C#](https://zh.wikipedia.org/wiki/C♯)，[Ruby](https://zh.wikipedia.org/wiki/Ruby)，[Scala](https://zh.wikipedia.org/wiki/Scala)和其他语言编写的项目。Maven曾是[Jakarta项目](https://zh.wikipedia.org/wiki/Jakarta项目)的子项目，现为由[Apache软件基金会](https://zh.wikipedia.org/wiki/Apache软件基金会)主持的独立Apache项目。
+
